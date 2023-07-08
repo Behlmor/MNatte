@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generador de Preguntas de Anime</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <h1>Generador de Preguntas de Anime</h1>
+  <button onclick="generarPregunta()">Generar Pregunta</button>
+  <div id="pregunta-container"></div>
+
+  <script>
+    // Clave de la API de ChatGPT
+    const apiKey = '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';
+
+    // Genera una pregunta utilizando la API de ChatGPT
+    async function generarPregunta() {
+      try {
+        const respuesta = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+          prompt: 'Genera una pregunta sobre anime.',
+          max_tokens: 50,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          }
+        });
+
+        const pregunta = respuesta.data.choices[0].text.trim();
+        mostrarPregunta(pregunta);
+      } catch (error) {
+        console.error('Error al generar la pregunta:', error);
+      }
+    }
+
+    // Muestra la pregunta generada en la interfaz
+    function mostrarPregunta(pregunta) {
+      const preguntaContainer = document.getElementById('pregunta-container');
+      preguntaContainer.innerHTML = `
+        <h3>Pregunta:</h3>
+        <p>${pregunta}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
